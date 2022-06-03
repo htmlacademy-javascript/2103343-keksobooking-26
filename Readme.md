@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Валентин](https://up.htmlacademy.ru/javascript/26/user/2103343).
-* Наставник: `Максим`.
+* Наставник: [Максим](https://htmlacademy.ru/profile/hikikomori).
 
 ---
 
