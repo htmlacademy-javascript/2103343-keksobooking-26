@@ -5,6 +5,6 @@ const getRandomFloat = (min, max, count) => {
   if (min >= 0 && min < max) {
     return parseFloat((Math.random() * (max - min) + min).toFixed(count));
   } 
-throw new Error('Неверный диапозон');
-}
+  throw new Error('Неверный диапозон');
+};
 getRandomFloat (1.1,1.2,5);
