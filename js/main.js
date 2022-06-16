@@ -29,40 +29,50 @@ const PRICE_MIN = 0;
 const PRICE_MAX = 100000;
 const ROOM_COUNT_MIN = 1;
 const ROOM_COUNT_MAX = 5;
+const MIN_PHOTOS_COUNT = 1;
+const MAX_PHOTOS_COUNT = 3;
 
-function getRandomArrayElement(elements) {
-  return elements[getRandomPositiveInteger(0, elements.length - 1)];
-}
-const getRandomArrayOfElements = (elements, length) => Array.from({length: length}, () => getRandomArrayElement(elements)); //
+const getRandomArrayElement = (elements) => elements[getRandom(0, elements.length - 1)];
+//массив случайной длины
+const getRandomArrayOfElements = (elements, length) => Array.from({length: length}, () => getRandomArrayElement(elements));
+//массив случайной длины без повторений
+const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1));
 
-const createAdvertisementArray = (i) => {
+const createAdvertisement = (i) => {
   const lat = getRandomFloat(LAT_MIN, LAT_MAX, 5);
   const lng = getRandomFloat(LNG_MIN, LNG_MAX, 5);
 
-return {
-  author:{
-    avatar:  `img/avatars/user${i < 10 ? '0' : ''}${i}.png`
-  },
-  offer:{
-    title: `Объявление №${i}`,
-    address: `${lat}, ${lng}`,
-    price:getRandom(PRICE_MIN, PRICE_MAX),
-    type: getRandomArrayElement(ROOM_TYPE),
-    rooms: getRandom(ROOM_COUNT_MIN, ROOM_COUNT_MAX),
-    guests:getRandom(GUESTS_COUNT_MIN, GUESTS_COUNT_MAX),
-    checkin: getRandomArrayElement(CHECKIN_TIME),
-    checkout: getRandomArrayElement(CHECKOUT_TIME),
-    features:'',
-    description:getRandomArrayElement(ROOM_DESCRIPTION),
-    photos: getRandomArrayOfElements(ACCOMMODATION_PHOTOS, getRandomInt(MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT)),
-  },
-  location = {
-    lat: lat,
-    lng: lng,
-
-  },
-}
+  return {
+    author:{
+      avatar:  `img/avatars/user${i < 10 ? '0' : ''}${i}.png`
+    },
+    offer:{
+      title: `Объявление №${i}`,
+      address: `${lat}, ${lng}`,
+      price:getRandom(PRICE_MIN, PRICE_MAX),
+      type: getRandomArrayElement(ROOM_TYPE),
+      rooms: getRandom(ROOM_COUNT_MIN, ROOM_COUNT_MAX),
+      guests:getRandom(GUESTS_COUNT_MIN, GUESTS_COUNT_MAX),
+      checkin: getRandomArrayElement(CHECKIN_TIME),
+      checkout: getRandomArrayElement(CHECKOUT_TIME),
+      features: getRandomArrayNoRepeat(ROOM_FEATURES.slice()),
+      description:getRandomArrayElement(ROOM_DESCRIPTION),
+      photos: getRandomArrayOfElements(ROOM_PHOTOS, getRandom(MIN_PHOTOS_COUNT, MAX_PHOTOS_COUNT)),
+    },
+    location: {
+      lat: lat,
+      lng: lng,
+    },
+  };
 
 };
+// создание массива из 10 объектов
+const createAdvertisementArray = (count) => {
+  const mainArray = [];
+  for (let i = 1; i <= count; i++) {
+    mainArray.push(createAdvertisement(i));
+  }
+  return mainArray;
+};
 
-
+createAdvertisementArray(ADV_COUNT);
