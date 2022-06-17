@@ -36,7 +36,7 @@ const getRandomArrayElement = (elements) => elements[getRandom(0, elements.lengt
 //массив случайной длины
 const getRandomArrayOfElements = (elements, length) => Array.from({length: length}, () => getRandomArrayElement(elements));
 //массив случайной длины без повторений
-const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1));
+const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1)[0]);
 
 const createAdvertisement = (i) => {
   const lat = getRandomFloat(LAT_MIN, LAT_MAX, 5);
@@ -44,7 +44,7 @@ const createAdvertisement = (i) => {
 
   return {
     author:{
-      avatar:  `img/avatars/user${i < 10 ? '0' : ''}${i}.png`
+      avatar:  `img/avatars/user${String(i).padStart(2, '0'}.png`
     },
     offer:{
       title: `Объявление №${i}`,
