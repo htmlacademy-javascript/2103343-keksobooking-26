@@ -44,7 +44,7 @@ const createAdvertisement = (i) => {
 
   return {
     author:{
-      avatar:  `img/avatars/user${String(i).padStart(2, '0'}.png`
+      avatar:  `img/avatars/user${String(i).padStart(2, '0')}.png`
     },
     offer:{
       title: `Объявление №${i}`,
