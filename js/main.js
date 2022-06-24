@@ -1,3 +1,2 @@
-import {createAdvertisementArray} from './data.js';
+import './create-card.js';
 
-createAdvertisementArray();

@@ -1,6 +1,6 @@
 import {getRandom, getRandomFloat, getRandomArrayElement, getRandomArrayOfElements, getRandomArrayNoRepeat} from './util.js';
 
-const ADV_COUNT = 10;
+const ADV_COUNT = 1;
 const ROOM_TYPE = ['place', 'flat', 'house', 'bungalow', 'hotel'];
 const CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 const CHECKOUT_TIME = ['12:00','13:00', '14:00'];
