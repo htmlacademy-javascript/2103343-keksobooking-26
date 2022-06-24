@@ -1,7 +1,6 @@
 import {createAdvertisementArray} from './data.js';
 
 const randomCard = createAdvertisementArray();
-console.log(createAdvertisementArray());
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const fragment = document.createDocumentFragment();
 const cardListElement = document.querySelector('#map-canvas');
@@ -48,21 +47,7 @@ randomCard.forEach(({author, offer}) => {
   if (photoList.length === 0) {
     photoList.classList.add('hidden');
   }
-  /*
-  const photoList = cardElement.querySelector('.popup__photos');
-  photoList.replaceChildren(...offer.photos.map(
-    (photo) => {
-      const photoElement = cardElement.querySelector('.popup__photo').cloneNode(true);
-      photoElement.src = photo;
 
-      return photoElement;
-    }
-  ));
-
-  if (photoList.length === 0) {
-    photoList.classList.add('hidden');
-  }
-  */
   fragment.append(cardElement);
 
 
