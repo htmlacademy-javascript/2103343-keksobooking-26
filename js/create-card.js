@@ -20,12 +20,25 @@ const createCard = (card) => {
     cardElement.querySelector('.popup__title').textContent = title;
     cardElement.querySelector('.popup__text--address').textContent = address;
     cardElement.querySelector('.popup__text--price').textContent = `${price} ₽/ночь`;
-
-
     cardElement.querySelector('.popup__type').textContent = typesMatch[type];
 
-    cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} комнаты для ${guests} гостей`;
+    const endings = (value, word) => {
+
+      if (value === 1) {
+        return word[0];
+      }
+      if (value > 1 && value < 5){
+        return word [1];
+      }
+      if (value >= 5){
+        return word [2];
+      }
+    };
+    const roomEnds = endings(rooms, ['комната', 'комнаты', 'комнат']);
+    const guestsEnds = endings(guests, ['гостя', 'гостей', 'гостей']);
+    cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${roomEnds} для ${guests} ${guestsEnds}`;
     cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
+
 
     const featuresList = cardElement.querySelectorAll('.popup__feature');
     featuresList.forEach((featureItem) => {
