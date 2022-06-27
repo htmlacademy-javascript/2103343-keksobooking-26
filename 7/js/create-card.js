@@ -1,57 +1,74 @@
 import {createAdvertisementArray} from './data.js';
+import { getRandom } from './util.js';
 
-const randomCard = createAdvertisementArray();
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const fragment = document.createDocumentFragment();
 const cardListElement = document.querySelector('#map-canvas');
+const typesMatch = {
+  flat: 'Квартира',
+  bungalow: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец',
+  hotel: 'Отель',
+};
+const createCard = (card) => {
 
-randomCard.forEach(({author, offer}) => {
-  const cardElement = cardTemplate.cloneNode(true);
+  card.forEach(({author, offer}) => {
+    const cardElement = cardTemplate.cloneNode(true);
+    const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = offer;
+    cardElement.querySelector('.popup__avatar').src = author.avatar ;
+    cardElement.querySelector('.popup__title').textContent = title;
+    cardElement.querySelector('.popup__text--address').textContent = address;
+    cardElement.querySelector('.popup__text--price').textContent = `${price} ₽/ночь`;
+    cardElement.querySelector('.popup__type').textContent = typesMatch[type];
 
-  cardElement.querySelector('.popup__avatar').src = author.avatar ;
-  cardElement.querySelector('.popup__title').textContent = offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
+    const endings = (value, word) => {
 
-  const typesMatch = {
-    flat: 'Квартира',
-    bungalow: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец',
-    hotel: 'Отель',
-  };
-  cardElement.querySelector('.popup__type').textContent = typesMatch[offer.type];
+      if (value === 1) {
+        return word[0];
+      }
+      if (value > 1 && value < 5){
+        return word [1];
+      }
+      if (value >= 5){
+        return word [2];
+      }
+    };
+    const roomEnds = endings(rooms, ['комната', 'комнаты', 'комнат']);
+    const guestsEnds = endings(guests, ['гостя', 'гостей', 'гостей']);
+    cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${roomEnds} для ${guests} ${guestsEnds}`;
+    cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
 
-  cardElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
-  cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
-  const featuresList = cardElement.querySelectorAll('.popup__feature');
-  featuresList.forEach((featureItem) => {
-    if (!offer.features.some((feature) => featureItem.classList.contains(`popup__feature--${feature}`))) {
-      featureItem.remove();
+    const featuresList = cardElement.querySelectorAll('.popup__feature');
+    featuresList.forEach((featureItem) => {
+      if (!features.some((feature) => featureItem.classList.contains(`popup__feature--${feature}`))) {
+        featureItem.remove();
+      }
+    });
+    if (features.length === 0) {
+      featuresList.classList.add('hidden');
     }
+    cardElement.querySelector('.popup__description').textContent = description;
+
+    const photoList = cardElement.querySelector('.popup__photos');
+    const photoElements = photoList.querySelector('.popup__photo');
+    photoElements.remove();
+    photos.forEach((photo) => {
+      const photoElement = photoElements.cloneNode(true);
+      photoElement.src = photo;
+      photoList.append(photoElement);
+    });
+    if (photoList.length === 0) {
+      photoList.classList.add('hidden');
+    }
+
+
+    fragment.append(cardElement);
+
+
   });
-  if (offer.features.length === 0) {
-    featuresList.classList.add('hidden');
-  }
-  cardElement.querySelector('.popup__description').textContent = offer.description;
 
-  const photoList = cardElement.querySelector('.popup__photos');
-  const photoElements = photoList.querySelector('.popup__photo');
-  photoElements.remove();
-  for (let i = 0; i < offer.photos.length; i++) {
-    const photoElement = photoElements.cloneNode(true);
-    photoElement.src = offer.photos[i];
-    photoList.append(photoElement);
-  }
-  if (photoList.length === 0) {
-    photoList.classList.add('hidden');
-  }
-
-  fragment.append(cardElement);
-
-
-});
-
-cardListElement.append(fragment);
-
+  return cardListElement.append(fragment.children[getRandom(0,9)]);
+};
+createCard(createAdvertisementArray());
