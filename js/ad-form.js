@@ -17,5 +17,5 @@ const enableForm = (form, elements) => {
     element.disabled = false;
   });
 };
-disableForm(adForm, adFormElements);
-enableForm(mapFilters, mapFiltersElements);
+disableForm(mapFilters, mapFiltersElements);
+enableForm(adForm, adFormElements);
