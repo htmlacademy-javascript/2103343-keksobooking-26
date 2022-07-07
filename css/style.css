@@ -989,6 +989,10 @@ fieldset {
   opacity: 0.6;
 }
 
+.ad-form__element--error{
+  color: #ff5635;
+}
+
 .visually-hidden {
   position: absolute;
 
