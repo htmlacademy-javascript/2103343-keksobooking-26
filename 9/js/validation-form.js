@@ -1,9 +1,9 @@
-import {endings} from './util.js';
+import {getRoomEnds, getGuestsEnds} from './util.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
-const MIN_ROOM_PRICE = 0;
 const MAX_ROOM_PRICE = 100000;
+const MIN_ROOM_PRICE = 0;
 const MAX_ROOMS = 100;
 const NO_GUESTS = 0;
 
@@ -16,13 +16,11 @@ const pristine = new Pristine(form, {
   errorTextClass: 'ad-form__element--error',
 },false);
 
+const checkTitleInput =  (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
+pristine.addValidator(form.querySelector('#title'), checkTitleInput);
 
-const titleInput =  (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
-pristine.addValidator(form.querySelector('#title'), titleInput);
-
-
-const priceInput = (value) => value >= MIN_ROOM_PRICE && value <= MAX_ROOM_PRICE;
-pristine.addValidator(form.querySelector('#price'), priceInput);
+const checkPriceInput = (value) => value >= MIN_ROOM_PRICE && value <= MAX_ROOM_PRICE;
+pristine.addValidator(form.querySelector('#price'), checkPriceInput);
 
 
 const guestsCountInput = form.querySelector('#capacity');
@@ -38,25 +36,25 @@ const advOption  = {
 
 const validateAdv = () => advOption[roomsCountInput.value].includes(Number(guestsCountInput.value));
 
-const roomEnds = (rooms) => endings(rooms, ['комната', 'комнат', 'комнат']);
-const guestsEnds = (guests) => endings(guests, ['гостя', 'гостей', 'гостей']);
 
-
-function guestsErorrMessage() {
-  if (Number(guestsCountInput.value) === NO_GUESTS) {
+const selectGuestsErorrMessage = () => {
+  const guestsCount = Number(guestsCountInput.value);
+  if (guestsCount === NO_GUESTS) {
     return 'Не для гостей';
   }
-  return `Необходимо не менее ${guestsCountInput.value} ${roomEnds(Number(guestsCountInput.value))} `;
-}
-function roomsErorrMessage() {
-  if (Number(roomsCountInput.value) === MAX_ROOMS) {
+  return `Необходимо не менее ${guestsCount} ${getRoomEnds(guestsCount)} `;
+};
+
+const selectRoomsErorrMessage = () => {
+  const roomsCount = Number(roomsCountInput.value);
+  if (roomsCount === MAX_ROOMS) {
     return 'Не для гостей';
   }
-  return `Не больше ${roomsCountInput.value} ${guestsEnds(Number(roomsCountInput.value))}`;
-}
+  return `Не больше ${roomsCount} ${getGuestsEnds(roomsCount)}`;
+};
 
-pristine.addValidator(roomsCountInput, validateAdv, roomsErorrMessage);
-pristine.addValidator(guestsCountInput, validateAdv, guestsErorrMessage);
+pristine.addValidator(roomsCountInput, validateAdv, selectRoomsErorrMessage);
+pristine.addValidator(guestsCountInput, validateAdv, selectGuestsErorrMessage);
 
 
 form.addEventListener('submit', (evt) => {
