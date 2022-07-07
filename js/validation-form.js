@@ -1,4 +1,4 @@
-import {endings} from './util.js';
+import {getWordEndings} from './util.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -36,28 +36,28 @@ const advOption  = {
 
 const validateAdv = () => advOption[roomsCountInput.value].includes(Number(guestsCountInput.value));
 
-const roomEnds = (rooms) => endings(rooms, ['комната', 'комнат', 'комнат']);
-const guestsEnds = (guests) => endings(guests, ['гостя', 'гостей', 'гостей']);
+const getRoomEnds = (rooms) => getWordEndings(rooms, ['комната', 'комнат', 'комнат']);
+const getGuestsEnds = (guests) => getWordEndings(guests, ['гостя', 'гостей', 'гостей']);
 
 
-const guestsErorrMessage = () => {
+const selectGuestsErorrMessage = () => {
   const guestsCount = Number(guestsCountInput.value);
   if (guestsCount === NO_GUESTS) {
     return 'Не для гостей';
   }
-  return `Необходимо не менее ${guestsCount} ${roomEnds(guestsCount)} `;
+  return `Необходимо не менее ${guestsCount} ${getRoomEnds(guestsCount)} `;
 };
 
-const roomsErorrMessage = () => {
+const selectRoomsErorrMessage = () => {
   const roomsCount = Number(roomsCountInput.value);
   if (roomsCount === MAX_ROOMS) {
     return 'Не для гостей';
   }
-  return `Не больше ${roomsCount} ${guestsEnds(roomsCount)}`;
+  return `Не больше ${roomsCount} ${getGuestsEnds(roomsCount)}`;
 };
 
-pristine.addValidator(roomsCountInput, validateAdv, roomsErorrMessage);
-pristine.addValidator(guestsCountInput, validateAdv, guestsErorrMessage);
+pristine.addValidator(roomsCountInput, validateAdv, selectRoomsErorrMessage);
+pristine.addValidator(guestsCountInput, validateAdv, selectGuestsErorrMessage);
 
 
 form.addEventListener('submit', (evt) => {

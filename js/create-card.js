@@ -1,5 +1,5 @@
 import {createAdvertisementArray} from './data.js';
-import { getRandom, endings} from './util.js';
+import { getRandom, getWordEndings} from './util.js';
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const fragment = document.createDocumentFragment();
@@ -23,8 +23,8 @@ const createCard = (card) => {
     cardElement.querySelector('.popup__type').textContent = typesMatch[type];
 
 
-    const roomEnds = endings(rooms, ['комната', 'комнаты', 'комнат']);
-    const guestsEnds = endings(guests, ['гостя', 'гостей', 'гостей']);
+    const roomEnds = getWordEndings(rooms, ['комната', 'комнаты', 'комнат']);
+    const guestsEnds = getWordEndings(guests, ['гостя', 'гостей', 'гостей']);
     cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${roomEnds} для ${guests} ${guestsEnds}`;
     cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
 

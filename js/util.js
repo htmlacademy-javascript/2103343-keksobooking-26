@@ -13,7 +13,7 @@ const getRandomArrayOfElements = (elements, length) => Array.from({length: lengt
 //массив случайной длины без повторений
 const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1)[0]);
 
-const endings = (value, word) => {
+const getWordEndings = (value, word) => {
 
   if (value === 1) {
     return word[0];
@@ -26,4 +26,4 @@ const endings = (value, word) => {
   }
 };
 
-export {getRandom, getRandomFloat, getRandomArrayElement, getRandomArrayOfElements, getRandomArrayNoRepeat, endings};
+export {getRandom, getRandomFloat, getRandomArrayElement, getRandomArrayOfElements, getRandomArrayNoRepeat, getWordEndings};
