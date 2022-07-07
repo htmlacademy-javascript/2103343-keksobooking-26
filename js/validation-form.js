@@ -58,3 +58,9 @@ const roomsErorrMessage = () => {
 
 pristine.addValidator(roomsCountInput, validateAdv, roomsErorrMessage);
 pristine.addValidator(guestsCountInput, validateAdv, guestsErorrMessage);
+
+
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  pristine.validate();
+});
