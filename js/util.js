@@ -13,4 +13,20 @@ const getRandomArrayOfElements = (elements, length) => Array.from({length: lengt
 //массив случайной длины без повторений
 const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1)[0]);
 
-export {getRandom, getRandomFloat, getRandomArrayElement, getRandomArrayOfElements, getRandomArrayNoRepeat};
+const getWordEndings = (value, word) => {
+
+  if (value === 1) {
+    return word[0];
+  }
+  if (value > 1 && value <= 4){
+    return word [1];
+  }
+  if (value > 4){
+    return word [2];
+  }
+};
+const getCardRoomEnds = (rooms) => getWordEndings(rooms, ['комната', 'комнаты', 'комнат']);
+const getRoomEnds = (rooms) => getWordEndings(rooms, ['комнаты', 'комнат', 'комнат']);
+const getGuestsEnds = (guests) => getWordEndings(guests, ['гостя', 'гостей', 'гостей']);
+
+export {getRandom, getRandomFloat, getRandomArrayElement, getRandomArrayOfElements, getRandomArrayNoRepeat, getRoomEnds, getGuestsEnds, getCardRoomEnds};
