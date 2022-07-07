@@ -1,4 +1,4 @@
-import {getWordEndings} from './util.js';
+import {getRoomEnds, getGuestsEnds} from './util.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -35,9 +35,6 @@ const advOption  = {
 
 
 const validateAdv = () => advOption[roomsCountInput.value].includes(Number(guestsCountInput.value));
-
-const getRoomEnds = (rooms) => getWordEndings(rooms, ['комната', 'комнат', 'комнат']);
-const getGuestsEnds = (guests) => getWordEndings(guests, ['гостя', 'гостей', 'гостей']);
 
 
 const selectGuestsErorrMessage = () => {
