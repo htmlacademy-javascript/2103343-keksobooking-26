@@ -5,6 +5,7 @@ import {createCard} from './create-card.js';
 //Координаты Токио
 const START_LAT = 35.68950;
 const START_LNG = 139.69200;
+// Количество знаков после запятой
 const ROUND_UP_TO = 5;
 
 
@@ -27,7 +28,7 @@ L.tileLayer(
 ).addTo(map);
 
 
-//1 Напишите код, который будет добавлять на карту специальную, «главную», метку. Иконка для метки есть в обновлении, файл main-pin.svg.
+//Добавление на карту специальной, «главной», метки.
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -44,15 +45,18 @@ const mainPinMarker = L.marker({
 
 mainPinMarker.addTo(map);
 
-//2 Реализуйте с помощью API карт выбор адреса путём перемещения главной метки.
+//Выбор адреса путём перемещения главной метки.
+const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
+
 const addressInput = document.querySelector('#address');
 addressInput.readOnly = true;
-addressInput.value = `${START_LAT.toFixed(ROUND_UP_TO)}, ${START_LNG.toFixed(ROUND_UP_TO)}`;
+addressInput.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
 mainPinMarker.on('moveend', (evt) => {
-  addressInput.value = `${evt.target.getLatLng().lat.toFixed(ROUND_UP_TO)}, ${evt.target.getLatLng().lng.toFixed(ROUND_UP_TO)}`;
+  const latLng = evt.target.getLatLng();
+  addressInput.value = `${roundUp(latLng.lat)}, ${roundUp(latLng.lng)}`;
 });
 
-//3 Напишите код, который добавит на карту метки объявлений, «обычные».
+// Добавление на карту меток объявлений, «обычных».
 const markerGroup = L.layerGroup().addTo(map);
 
 const ordinaryPinIcon = L.icon({
@@ -61,12 +65,9 @@ const ordinaryPinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-//4 С помощью API карт реализуйте показ балуна с подробной информацией об объявлении.
+// Показ балуна с подробной информацией об объявлении.
 const advertisementCard = createAdvertisementArray();
 
-//const createMarker = (card)
-
-//advertisementCard.forEach(createMarker());
 advertisementCard.forEach((card) =>  {
   const marker = L.marker({
     lat: card.location.lat,
