@@ -12,7 +12,7 @@ const getRandomArrayElement = (elements) => elements[getRandom(0, elements.lengt
 const getRandomArrayOfElements = (elements, length) => Array.from({length: length}, () => getRandomArrayElement(elements));
 //массив случайной длины без повторений
 const getRandomArrayNoRepeat = (elements) => Array.from({length: getRandom(1, elements.length)}, () => elements.splice(getRandom(0, elements.length - 1), 1)[0]);
-
+//выбор правильных окончаний слов
 const getWordEndings = (value, word) => {
 
   if (value === 1) {
