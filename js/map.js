@@ -7,19 +7,18 @@ const START_LAT = 35.68950;
 const START_LNG = 139.69200;
 // Количество знаков после запятой
 const ROUND_UP_TO = 5;
-
+// Масштаб
+const SCALE = 10;
 
 // Отображение карты и дальнейший переход страницы в активное состояние после инициализации карты.
 disableForm();
 
 const map = L.map('map-canvas')
-  .on('load', () => {
-    enableForm();
-  })
+  .on('load', enableForm)
   .setView({
     lat: START_LAT,
     lng: START_LNG,
-  }, 10);
+  }, SCALE);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
