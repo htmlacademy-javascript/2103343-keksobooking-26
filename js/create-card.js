@@ -23,16 +23,20 @@ const createCard = (card) => {
   cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${getCardRoomEnds(rooms)} для ${guests} ${getGuestsEnds(guests)}`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
 
-
-  const featuresList = cardElement.querySelectorAll('.popup__feature');
-  featuresList.forEach((featureItem) => {
-    if (!features.some((feature) => featureItem.classList.contains(`popup__feature--${feature}`))) {
-      featureItem.remove();
-    }
-  });
-  if (features.length === 0) {
+  const featuresList = cardElement.querySelector('.popup__features');
+  if(features) {
+    const featuresElements = featuresList.querySelectorAll('.popup__feature');
+    featuresElements.forEach((featureItem) => {
+      if(!features.some((feature) => featureItem.classList.contains(`popup__feature--${feature}`)))
+      {
+        featureItem.remove();
+      }
+    });
+  }
+  else {
     featuresList.classList.add('hidden');
   }
+
   cardElement.querySelector('.popup__description').textContent = description;
 
   const photoList = cardElement.querySelector('.popup__photos');

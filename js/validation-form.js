@@ -1,4 +1,7 @@
 import {getRoomEnds, getGuestsEnds} from './util.js';
+import {sendData} from './api.js';
+import {showSuccessMessage, showErrorMessage} from './message.js';
+import {setAddressInput, resetMap} from './map.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -130,7 +133,52 @@ checkOutField.addEventListener('change', (evt) => {
 });
 
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const submitButton = document.querySelector('.ad-form__submit');
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Сохраняю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Сохранить';
+};
+
+const resetForm = () => {
+  form.reset();
+  sliderElement.noUiSlider.set(priceInput.placeholder);
+  priceInput.placeholder = getMinPrice();
+  setAddressInput();
+  resetMap();
+};
+
+const resetButton = document.querySelector('.ad-form__reset');
+
+resetButton.addEventListener('click', (evt) => {evt.preventDefault(); resetForm();});
+
+const setUserFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (!pristine.validate()) {
+      return;
+    }
+
+    blockSubmitButton();
+    sendData(
+      () => {
+        showSuccessMessage();
+        unblockSubmitButton();
+        resetForm();
+      },
+      () => {
+        showErrorMessage();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target),
+    );
+  });
+};
+
+setUserFormSubmit();
