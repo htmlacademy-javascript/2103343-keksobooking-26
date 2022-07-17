@@ -4,15 +4,12 @@ const SHOW_TIME = 5000;
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
-//Сообщение об успешной отправке
-const showSuccessMessage = () => {
-  const message = successMessageTemplate.cloneNode(true);
-  document.body.appendChild(message);
 
+const events = (evtObj) => {
   const eventOnEsc = (evt) => {
     if(isEscapeKey(evt)){
       evt.preventDefault();
-      message.remove();
+      evtObj.remove();
       document.removeEventListener('keydown', eventOnEsc);
     }
   };
@@ -20,9 +17,16 @@ const showSuccessMessage = () => {
 
   const eventOnClick = () => {
     document.removeEventListener('click', eventOnClick);
-    message.remove();
+    evtObj.remove();
   };
   document.addEventListener('click', eventOnClick);
+};
+
+//Сообщение об успешной отправке
+const showSuccessMessage = () => {
+  const message = successMessageTemplate.cloneNode(true);
+  document.body.appendChild(message);
+  events(message);
   setTimeout(() => {
     message.remove();
   }, SHOW_TIME);
@@ -37,23 +41,7 @@ const showErrorMessage = () => {
   errorMessageCloseButton.addEventListener('click', () => {
     message.remove();
   });
-
-  const eventOnEsc = (evt) => {
-    if(isEscapeKey(evt)){
-      evt.preventDefault();
-      message.remove();
-      document.removeEventListener('keydown', eventOnEsc);
-    }
-  };
-  document.addEventListener('keydown', eventOnEsc);
-
-  const eventOnClick = () => {
-    document.removeEventListener('click', eventOnClick);
-    message.remove();
-  };
-  document.addEventListener('click', eventOnClick);
-
-
+  events(message);
 };
 // Сообщение об ошибке загрузки данных с сервера
 const showAlert = (alertMessage) => {
