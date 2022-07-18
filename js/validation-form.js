@@ -1,7 +1,7 @@
 import {getRoomEnds, getGuestsEnds} from './util.js';
 import {sendData} from './api.js';
 import {showSuccessMessage, showErrorMessage} from './message.js';
-import {setAddressInput, resetMap} from './map.js';
+import {resetMap} from './map.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -149,7 +149,6 @@ const resetForm = () => {
   form.reset();
   sliderElement.noUiSlider.set(priceInput.placeholder);
   priceInput.placeholder = getMinPrice();
-  setAddressInput();
   resetMap();
 };
 

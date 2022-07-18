@@ -9,10 +9,7 @@ const getData = (onSuccess) => {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then((data) => onSuccess(data))
-
-    .catch((error) => {
-      showAlert(error);
-    });
+    .catch(showAlert);
 };
 // Отправка данных
 const sendData = (onSuccess, onFail, body) => {

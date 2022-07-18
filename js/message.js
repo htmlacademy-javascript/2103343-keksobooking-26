@@ -5,31 +5,28 @@ const SHOW_TIME = 5000;
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 
-const events = (evtObj) => {
-  const eventOnEsc = (evt) => {
+const messageCloseHandler = (evtObj) => {
+  const onEventEscKeydown = (evt) => {
     if(isEscapeKey(evt)){
       evt.preventDefault();
       evtObj.remove();
-      document.removeEventListener('keydown', eventOnEsc);
+      document.removeEventListener('keydown', onEventEscKeydown);
     }
   };
-  document.addEventListener('keydown', eventOnEsc);
+  document.addEventListener('keydown', onEventEscKeydown);
 
-  const eventOnClick = () => {
-    document.removeEventListener('click', eventOnClick);
+  const onEventClick = () => {
+    document.removeEventListener('click', onEventClick);
     evtObj.remove();
   };
-  document.addEventListener('click', eventOnClick);
+  document.addEventListener('click', onEventClick);
 };
 
 //Сообщение об успешной отправке
 const showSuccessMessage = () => {
   const message = successMessageTemplate.cloneNode(true);
   document.body.appendChild(message);
-  events(message);
-  setTimeout(() => {
-    message.remove();
-  }, SHOW_TIME);
+  messageCloseHandler(message);
 };
 //Сообщение ошибки
 const showErrorMessage = () => {
@@ -41,7 +38,7 @@ const showErrorMessage = () => {
   errorMessageCloseButton.addEventListener('click', () => {
     message.remove();
   });
-  events(message);
+  messageCloseHandler(message);
 };
 // Сообщение об ошибке загрузки данных с сервера
 const showAlert = (alertMessage) => {
