@@ -8,11 +8,8 @@ const getData = (onSuccess) => {
       }
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then((data) => onSuccess(data))
-
-    .catch((error) => {
-      showAlert(error);
-    });
+    .then(onSuccess)
+    .catch(showAlert);
 };
 // Отправка данных
 const sendData = (onSuccess, onFail, body) => {

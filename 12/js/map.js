@@ -21,7 +21,7 @@ const setAddressInput = () => {
 disableForm();
 
 const map = L.map('map-canvas')
-  .on('load', enableForm, setAddressInput())
+  .on('load', enableForm)
   .setView({
     lat: START_LAT,
     lng: START_LNG,
@@ -51,8 +51,10 @@ const mainPinMarker = L.marker({
 
 mainPinMarker.addTo(map);
 
+setAddressInput();
 
 //Выбор адреса путём перемещения главной метки.
+
 mainPinMarker.on('moveend', (evt) => {
   const latLng = evt.target.getLatLng();
   addressInput.value = `${roundUp(latLng.lat)}, ${roundUp(latLng.lng)}`;
@@ -86,6 +88,7 @@ const createMarker = (card) =>  {
 const createMarkers = (dataOffers) => {dataOffers.forEach(createMarker);};
 // Сброс карты
 const resetMap = () => {
+  setAddressInput();
   mainPinMarker.setLatLng({
     lat: START_LAT,
     lng: START_LNG,
@@ -94,8 +97,8 @@ const resetMap = () => {
     .setView({
       lat: START_LAT,
       lng: START_LNG,
-    }, 10)
+    }, SCALE)
     .closePopup();
 };
 
-export {createMarkers, setAddressInput, resetMap};
+export {createMarkers, resetMap};

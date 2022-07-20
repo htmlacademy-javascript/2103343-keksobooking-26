@@ -4,28 +4,29 @@ const SHOW_TIME = 5000;
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+
+const messageCloseHandler = (evtObj) => {
+  const onEventEscKeydown = (evt) => {
+    if(isEscapeKey(evt)){
+      evt.preventDefault();
+      evtObj.remove();
+      document.removeEventListener('keydown', onEventEscKeydown);
+    }
+  };
+  document.addEventListener('keydown', onEventEscKeydown);
+
+  const onEventClick = () => {
+    document.removeEventListener('click', onEventClick);
+    evtObj.remove();
+  };
+  document.addEventListener('click', onEventClick);
+};
+
 //Сообщение об успешной отправке
 const showSuccessMessage = () => {
   const message = successMessageTemplate.cloneNode(true);
   document.body.appendChild(message);
-
-  const eventOnEsc = (evt) => {
-    if(isEscapeKey(evt)){
-      evt.preventDefault();
-      message.remove();
-      document.removeEventListener('keydown', eventOnEsc);
-    }
-  };
-  document.addEventListener('keydown', eventOnEsc);
-
-  const eventOnClick = () => {
-    document.removeEventListener('click', eventOnClick);
-    message.remove();
-  };
-  document.addEventListener('click', eventOnClick);
-  setTimeout(() => {
-    message.remove();
-  }, SHOW_TIME);
+  messageCloseHandler(message);
 };
 //Сообщение ошибки
 const showErrorMessage = () => {
@@ -37,23 +38,7 @@ const showErrorMessage = () => {
   errorMessageCloseButton.addEventListener('click', () => {
     message.remove();
   });
-
-  const eventOnEsc = (evt) => {
-    if(isEscapeKey(evt)){
-      evt.preventDefault();
-      message.remove();
-      document.removeEventListener('keydown', eventOnEsc);
-    }
-  };
-  document.addEventListener('keydown', eventOnEsc);
-
-  const eventOnClick = () => {
-    document.removeEventListener('click', eventOnClick);
-    message.remove();
-  };
-  document.addEventListener('click', eventOnClick);
-
-
+  messageCloseHandler(message);
 };
 // Сообщение об ошибке загрузки данных с сервера
 const showAlert = (alertMessage) => {
