@@ -1,5 +1,4 @@
-import {disableForm, enableForm} from './ad-form.js';
-import {createAdvertisementArray} from './data.js';
+import {disableForm, disableFormFilter, enableForm} from './ad-form.js';
 import {createCard} from './create-card.js';
 
 //Координаты Токио
@@ -9,9 +8,18 @@ const START_LNG = 139.69200;
 const ROUND_UP_TO = 5;
 // Масштаб
 const SCALE = 10;
+//Округление координат
+const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
+//Поле адреса
+const addressInput = document.querySelector('#address');
+const setAddressInput = () => {
+  addressInput.readOnly = true;
+  addressInput.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
+};
 
 // Отображение карты и дальнейший переход страницы в активное состояние после инициализации карты.
 disableForm();
+disableFormFilter();
 
 const map = L.map('map-canvas')
   .on('load', enableForm)
@@ -44,12 +52,10 @@ const mainPinMarker = L.marker({
 
 mainPinMarker.addTo(map);
 
-//Выбор адреса путём перемещения главной метки.
-const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
+setAddressInput();
 
-const addressInput = document.querySelector('#address');
-addressInput.readOnly = true;
-addressInput.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
+//Выбор адреса путём перемещения главной метки.
+
 mainPinMarker.on('moveend', (evt) => {
   const latLng = evt.target.getLatLng();
   addressInput.value = `${roundUp(latLng.lat)}, ${roundUp(latLng.lng)}`;
@@ -64,10 +70,9 @@ const ordinaryPinIcon = L.icon({
   iconAnchor: [20, 40],
 });
 
-// Показ балуна с подробной информацией об объявлении.
-const advertisementCard = createAdvertisementArray();
+// Создание обьявлений.
 
-advertisementCard.forEach((card) =>  {
+const createMarker = (card) =>  {
   const marker = L.marker({
     lat: card.location.lat,
     lng: card.location.lng,
@@ -78,5 +83,23 @@ advertisementCard.forEach((card) =>  {
   marker
     .addTo(markerGroup)
     .bindPopup(createCard(card));
-});
 
+};
+
+const createMarkers = (dataOffers) => {dataOffers.forEach(createMarker);};
+// Сброс карты
+const resetMap = () => {
+  setAddressInput();
+  mainPinMarker.setLatLng({
+    lat: START_LAT,
+    lng: START_LNG,
+  });
+  map
+    .setView({
+      lat: START_LAT,
+      lng: START_LNG,
+    }, SCALE)
+    .closePopup();
+};
+
+export {createMarkers, resetMap};

@@ -11,20 +11,27 @@ const switchElements = (elements, toggle) => elements.forEach((element) => {
 // Неактивное состояние.
 const disableForm = () => {
   adForm.classList.add('.ad-form--disabled');
-  mapFilters.classList.add('.map__filters--disabled');
   sliderElement.classList.add('.ad-form__slider--disabled');
   switchElements(adFormElements, true);
-  switchElements(mapFiltersElements, true);
+
 };
 // Активное состояние.
 const enableForm = () => {
   adForm.classList.remove('ad-form--disabled');
-  mapFilters.classList.remove('.map__filters--disabled');
   sliderElement.classList.remove('.ad-form__slider--disabled');
   switchElements(adFormElements, false);
+};
+//Активное состояние формы фильтра.
+const enableFormFilter = () => {
+  mapFilters.classList.remove('.map__filters--disabled');
   switchElements(mapFiltersElements, false);
 };
+//Неактивное состояние формы фильтра.
+const disableFormFilter = () => {
+  mapFilters.classList.add('.map__filters--disabled');
+  switchElements(mapFiltersElements, true);
+};
 
-export {disableForm, enableForm};
+export {disableForm, enableForm, enableFormFilter, disableFormFilter};
 
 
