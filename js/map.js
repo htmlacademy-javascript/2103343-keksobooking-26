@@ -1,5 +1,8 @@
 import {disableForm, disableFormFilter, enableForm} from './ad-form.js';
 import {createCard} from './create-card.js';
+import {getData} from './api.js';
+import { onFilterChange, filterMarkers } from './filter.js';
+import { debounce } from './util.js';
 
 //Координаты Токио
 const START_LAT = 35.68950;
@@ -8,6 +11,9 @@ const START_LNG = 139.69200;
 const ROUND_UP_TO = 5;
 // Масштаб
 const SCALE = 10;
+//Число карточек
+const CARDS_COUNT = 10;
+
 //Округление координат
 const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
 //Поле адреса
@@ -85,8 +91,18 @@ const createMarker = (card) =>  {
     .bindPopup(createCard(card));
 
 };
+//Отрисовка 10 объявлений
+const createMarkers = () => {
+  getData((cards) => {
+    cards
+      .slice()
+      .slice(0, CARDS_COUNT)
+      .forEach(createMarker);
+    onFilterChange(debounce(() => {
+      filterMarkers(cards);}));
+  });
 
-const createMarkers = (dataOffers) => {dataOffers.forEach(createMarker);};
+};
 // Сброс карты
 const resetMap = () => {
   setAddressInput();
@@ -102,4 +118,4 @@ const resetMap = () => {
     .closePopup();
 };
 
-export {createMarkers, resetMap};
+export {createMarker, resetMap, markerGroup, createMarkers};
