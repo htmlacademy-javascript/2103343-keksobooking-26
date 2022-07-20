@@ -1,4 +1,4 @@
-import { disableForm } from './ad-form.js';
+import { disableFormFilter, enableFormFilter } from './ad-form.js';
 import {showAlert} from './message.js';
 //Получение данных
 const getData = (onSuccess) => {
@@ -10,7 +10,8 @@ const getData = (onSuccess) => {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then(onSuccess)
-    .catch(() => {showAlert(); disableForm();});
+    .then(enableFormFilter)
+    .catch(() => {showAlert(); disableFormFilter();});
 };
 // Отправка данных
 const sendData = (onSuccess, onFail, body) => {

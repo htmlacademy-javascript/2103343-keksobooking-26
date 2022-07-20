@@ -1,4 +1,4 @@
-import {disableForm, enableForm} from './ad-form.js';
+import {disableForm, disableFormFilter, enableForm} from './ad-form.js';
 import {createCard} from './create-card.js';
 
 //Координаты Токио
@@ -19,6 +19,7 @@ const setAddressInput = () => {
 
 // Отображение карты и дальнейший переход страницы в активное состояние после инициализации карты.
 disableForm();
+disableFormFilter();
 
 const map = L.map('map-canvas')
   .on('load', enableForm)
