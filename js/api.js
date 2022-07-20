@@ -1,3 +1,4 @@
+import { disableForm } from './ad-form.js';
 import {showAlert} from './message.js';
 //Получение данных
 const getData = (onSuccess) => {
@@ -9,7 +10,7 @@ const getData = (onSuccess) => {
       throw new Error(`${response.status} ${response.statusText}`);
     })
     .then(onSuccess)
-    .catch(showAlert);
+    .catch(() => {showAlert(); disableForm();});
 };
 // Отправка данных
 const sendData = (onSuccess, onFail, body) => {

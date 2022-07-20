@@ -41,10 +41,10 @@ const showErrorMessage = () => {
   messageCloseHandler(message);
 };
 // Сообщение об ошибке загрузки данных с сервера
-const showAlert = (alertMessage) => {
+const showAlert = () => {
   const alert = document.createElement('div');
   alert.classList.add('allert');
-  alert.textContent = alertMessage;
+  alert.textContent = 'Ошибка загрузки данных с сервера!';
   document.body.append(alert);
   setTimeout(() => {
     alert.remove();
