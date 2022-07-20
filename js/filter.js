@@ -18,48 +18,35 @@ const priceRange = {
   },
 };
 
-
-const checkAdvType = ({offer}) => {
-  const advTypeValue = document.querySelector('#housing-type').value;
-  return advTypeValue === DEFAULT_VALUE || offer.type === advTypeValue ;
-};
-
-const checkPrice = ({offer}) => {
-  const priceValue = document.querySelector('#housing-price').value;
-  return priceValue === DEFAULT_VALUE || offer.price <= priceRange[priceValue].max && offer.price >= priceRange[priceValue].min;
-};
-
-const checkRoomsCount = ({offer}) => {
-  const roomsCountValue = document.querySelector('#housing-rooms').value;
-  return roomsCountValue === DEFAULT_VALUE || offer.rooms === Number(roomsCountValue);
-};
-
-const checkGuestsCount = ({offer}) => {
-  const guestsCountValue = document.querySelector('#housing-guests').value;
-  return guestsCountValue === DEFAULT_VALUE ||offer.guests === Number(guestsCountValue);
-};
-
-
-const getSelectedCheckboxes = () => {
-  const selectedCheckboxes = document.querySelectorAll('input[name="features"]:checked');
-  const values = Array.from(selectedCheckboxes, ({value}) => value);
-  return values;
-};
-
-const checkFeatures = ({offer}) => {
-  const filtersFeatures = getSelectedCheckboxes();
-
-  if (offer.features) {
-    return filtersFeatures.every((feature) => offer.features.includes(feature));
-  }
-  return false;
-};
-
 const filterMarkers = (cards) => {
   markerGroup.clearLayers();
-  const cardFilter = cards.filter((card) => (checkAdvType(card) && checkPrice(card) &&
-  checkRoomsCount(card) && checkGuestsCount(card) && checkFeatures(card))).slice(0, MARKERS_COUNT);
+  const getFilteredCard = (card) => {
+    const {price, type, rooms, guests, features} = card.offer;
 
+    const mapFilterType = document.querySelector('#housing-type');
+    const mapFilterPrice = document.querySelector('#housing-price');
+    const mapFilterRooms = document.querySelector('#housing-rooms');
+    const mapFilterGuests = document.querySelector('#housing-guests');
+    const mapSelectedFeatures = document.querySelectorAll('input[name="features"]:checked');
+
+    const checkAdvType = () => mapFilterType.value === DEFAULT_VALUE || type === mapFilterType.value;
+    const checkPrice = () =>  mapFilterPrice.value === DEFAULT_VALUE || price <= priceRange[mapFilterPrice.value].max && price >= priceRange[mapFilterPrice.value].min;
+    const checkRoomsCount = () => mapFilterRooms.value === DEFAULT_VALUE || rooms === Number(mapFilterRooms.value);
+    const checkGuestsCount = () => mapFilterGuests.value === DEFAULT_VALUE || guests === Number(mapFilterGuests.value);
+    const getSelectedCheckboxes = () => {const values = Array.from(mapSelectedFeatures, ({value}) => value);
+      return values;
+    };
+    const checkFeatures = () => {
+      const filtersFeatures = getSelectedCheckboxes();
+      if (features) {
+        return filtersFeatures.every((feature) => features.includes(feature));
+      }
+      return false;
+    };
+    return (checkAdvType(card) && checkPrice(card) &&
+  checkRoomsCount(card) && checkGuestsCount(card) && checkFeatures(card));
+  };
+  const cardFilter = cards.filter(getFilteredCard).slice(0, MARKERS_COUNT);
   cardFilter.forEach(createMarker);
 };
 
