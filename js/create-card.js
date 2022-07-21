@@ -50,7 +50,8 @@ const createCard = (card) => {
     });
   }
   else {
-    photoList.classList.add('hidden');}
+    photoList.classList.add('hidden');
+  }
 
   return cardElement;
 };

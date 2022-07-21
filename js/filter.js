@@ -49,18 +49,18 @@ const filterMarkers = (cards) => {
   };
 
 
-  const filteredArr = [];
+  const filteredCards = [];
 
-  for (const elem of cards) {
-    if (getFilteredCard(elem)) {
-      filteredArr.push(elem);
+  for (const el of cards) {
+    if (getFilteredCard(el)) {
+      filteredCards.push(el);
     }
-    if (filteredArr.length === MARKERS_COUNT) {
+    if (filteredCards.length === MARKERS_COUNT) {
       break;
     }
   }
 
-  filteredArr.forEach(createMarker);
+  filteredCards.forEach(createMarker);
 
 };
 const onFilterChange = (cb) => {

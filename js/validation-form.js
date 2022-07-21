@@ -10,6 +10,21 @@ const MAX_ROOM_PRICE = 100000;
 const MAX_ROOMS = 100;
 const NO_GUESTS = 0;
 
+const advOption  = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
+const advTypePrice = {
+  bungalow : 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000
+};
+
 const form = document.querySelector('.ad-form');
 
 const pristine = new Pristine(form, {
@@ -25,16 +40,7 @@ pristine.addValidator(form.querySelector('#title'), checkTitleInput);
 const guestsCountInput = form.querySelector('#capacity');
 const roomsCountInput = form.querySelector('#room_number');
 
-const advOption  = {
-  1: [1],
-  2: [1, 2],
-  3: [1, 2, 3],
-  100: [0]
-};
-
-
 const validateAdv = () => advOption[roomsCountInput.value].includes(Number(guestsCountInput.value));
-
 
 const selectGuestsErorrMessage = () => {
   const guestsCount = Number(guestsCountInput.value);
@@ -57,13 +63,7 @@ pristine.addValidator(guestsCountInput, validateAdv, selectGuestsErorrMessage);
 
 const priceInput = form.querySelector('#price');
 const advTypeField = document.querySelector('#type');
-const advTypePrice = {
-  bungalow : 0,
-  flat: 1000,
-  hotel: 3000,
-  house: 5000,
-  palace: 10000
-};
+
 
 const getMinPrice = () => Number(advTypePrice[advTypeField.value]);
 
@@ -138,12 +138,12 @@ const submitButton = document.querySelector('.ad-form__submit');
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
-  submitButton.textContent = 'Сохраняю...';
+  submitButton.textContent = 'Публикую...';
 };
 
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
-  submitButton.textContent = 'Сохранить';
+  submitButton.textContent = 'Опубликовать';
 };
 
 const resetForm = () => {
