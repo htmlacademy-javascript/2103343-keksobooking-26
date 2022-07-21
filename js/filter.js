@@ -48,13 +48,25 @@ const filterMarkers = (cards) => {
   checkRoomsCount(card) && checkGuestsCount(card) && checkFeatures(card));
   };
 
-  const cardFilter = cards.filter(getFilteredCard).slice(0, MARKERS_COUNT);
-  cardFilter.forEach(createMarker);
-};
 
+  const filteredArr = [];
+
+  for (const elem of cards) {
+    if (getFilteredCard(elem)) {
+      filteredArr.push(elem);
+    }
+
+    if (filteredArr.length === MARKERS_COUNT) {
+      break;
+    }
+  }
+
+  filteredArr.forEach(createMarker);
+
+};
 const onFilterChange = (cb) => {
   const filterForm = document.querySelector('.map__filters');
   filterForm.addEventListener('change', cb);
 };
 
-export{filterMarkers, onFilterChange};
+export {filterMarkers, onFilterChange};
