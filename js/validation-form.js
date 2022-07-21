@@ -2,6 +2,7 @@ import {getRoomEnds, getGuestsEnds} from './util.js';
 import {sendData} from './api.js';
 import {showSuccessMessage, showErrorMessage} from './message.js';
 import {resetMap} from './map.js';
+import { resetPhotos } from './photo.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -150,6 +151,7 @@ const resetForm = () => {
   sliderElement.noUiSlider.set(priceInput.placeholder);
   priceInput.placeholder = getMinPrice();
   resetMap();
+  resetPhotos();
 };
 
 const resetButton = document.querySelector('.ad-form__reset');
