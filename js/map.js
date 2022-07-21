@@ -102,6 +102,9 @@ const createMarkers = () => {
   });
 
 };
+
+createMarkers();
+
 // Сброс карты
 const resetMap = () => {
   setAddressInput();

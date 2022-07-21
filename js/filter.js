@@ -55,7 +55,6 @@ const filterMarkers = (cards) => {
     if (getFilteredCard(elem)) {
       filteredArr.push(elem);
     }
-
     if (filteredArr.length === MARKERS_COUNT) {
       break;
     }

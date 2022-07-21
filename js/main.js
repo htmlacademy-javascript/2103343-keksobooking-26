@@ -1,4 +1,3 @@
 import './validation-form.js';
-import {createMarkers} from './map.js';
-
-createMarkers();
+import './map.js';
+import './photo.js';
