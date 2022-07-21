@@ -6,27 +6,31 @@ const userPhotoPreview = document.querySelector('.ad-form-header__preview img');
 const advPhotoChooser = document.querySelector('#images');
 const advPhotoPreview = document.querySelector('.ad-form__photo');
 
+// Получение ссылки
+const getPhotoUrl = (photoChooser) => {
+  const file = photoChooser.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    return URL.createObjectURL(file);
+  }
+};
+
+//Выбор фото аватара
 userPhotoChooser.addEventListener('change', () => {
-  const file = userPhotoChooser.files[0];
-  const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-  if (matches) {
-    userPhotoPreview.src = URL.createObjectURL(file);
-  }
+  userPhotoPreview.src = getPhotoUrl(userPhotoChooser);
 });
 
+// Выбор фото жилья
 advPhotoChooser.addEventListener('change', () => {
-  const file = advPhotoChooser.files[0];
-  const fileName = file.name.toLowerCase();
-  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-  if (matches) {
-    advPhotoPreview.innerHTML = '';
-    const photo = document.createElement('img');
-    photo.src = URL.createObjectURL(file);
-    advPhotoPreview.append(photo);
-  }
+  advPhotoPreview.innerHTML = '';
+  const photo = document.createElement('img');
+  photo.classList.add('ad-form__photo');
+  photo.src = getPhotoUrl(advPhotoChooser);
+  advPhotoPreview.append(photo);
 });
 
+// Очистка формы
 const resetPhotos = () =>{
   advPhotoPreview.innerHTML = '';
   userPhotoPreview.src = DEFAULT_AVATAR_IMAGE;
