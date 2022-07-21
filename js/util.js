@@ -16,6 +16,14 @@ const getRoomEnds = (rooms) => getWordEndings(rooms, ['комнаты', 'ком�
 const getGuestsEnds = (guests) => getWordEndings(guests, ['гостя', 'гостей', 'гостей']);
 //Нажатие ESC
 const isEscapeKey = (evt) => evt.key === 'Escape';
+//Функция debounce для устранения дребезга
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
 
 
-export {getRoomEnds, getGuestsEnds, getCardRoomEnds, isEscapeKey};
+export {getRoomEnds, getGuestsEnds, getCardRoomEnds, isEscapeKey, debounce};

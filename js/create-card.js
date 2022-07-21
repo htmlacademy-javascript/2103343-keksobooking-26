@@ -40,16 +40,18 @@ const createCard = (card) => {
   cardElement.querySelector('.popup__description').textContent = description;
 
   const photoList = cardElement.querySelector('.popup__photos');
-  const photoElements = photoList.querySelector('.popup__photo');
-  photoElements.remove();
-  photos.forEach((photo) => {
-    const photoElement = photoElements.cloneNode(true);
-    photoElement.src = photo;
-    photoList.append(photoElement);
-  });
-  if (photoList.length === 0) {
-    photoList.classList.add('hidden');
+  if(photos) {
+    const photoElements = photoList.querySelector('.popup__photo');
+    photoElements.remove();
+    photos.forEach((photo) => {
+      const photoElement = photoElements.cloneNode(true);
+      photoElement.src = photo;
+      photoList.append(photoElement);
+    });
   }
+  else {
+    photoList.classList.add('hidden');}
+
   return cardElement;
 };
 
