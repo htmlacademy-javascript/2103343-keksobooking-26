@@ -36,6 +36,7 @@ const filterMarkers = (cards) => {
     const getSelectedCheckboxes = () => {const values = Array.from(mapSelectedFeatures, ({value}) => value);
       return values;
     };
+
     const checkFeatures = () => {
       const filtersFeatures = getSelectedCheckboxes();
       if (features) {
@@ -46,6 +47,7 @@ const filterMarkers = (cards) => {
     return (checkAdvType(card) && checkPrice(card) &&
   checkRoomsCount(card) && checkGuestsCount(card) && checkFeatures(card));
   };
+
   const cardFilter = cards.filter(getFilteredCard).slice(0, MARKERS_COUNT);
   cardFilter.forEach(createMarker);
 };

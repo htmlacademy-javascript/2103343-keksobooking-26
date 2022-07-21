@@ -17,13 +17,13 @@ const getGuestsEnds = (guests) => getWordEndings(guests, ['гостя', 'гос�
 //Нажатие ESC
 const isEscapeKey = (evt) => evt.key === 'Escape';
 //Функция debounce для устранения дребезга
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = 500) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
 
 export {getRoomEnds, getGuestsEnds, getCardRoomEnds, isEscapeKey, debounce};

@@ -95,7 +95,6 @@ const createMarker = (card) =>  {
 const createMarkers = () => {
   getData((cards) => {
     cards
-      .slice()
       .slice(0, CARDS_COUNT)
       .forEach(createMarker);
     onFilterChange(debounce(() => {
