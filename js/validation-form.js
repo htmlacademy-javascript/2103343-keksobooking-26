@@ -2,7 +2,8 @@ import {getRoomEnds, getGuestsEnds} from './util.js';
 import {sendData} from './api.js';
 import {showSuccessMessage, showErrorMessage} from './message.js';
 import {resetMap} from './map.js';
-import { resetPhotos } from './photo.js';
+import { onFormPhotosReset } from './photo.js';
+import { onFilterFormReset } from './filter.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -10,14 +11,14 @@ const MAX_ROOM_PRICE = 100000;
 const MAX_ROOMS = 100;
 const NO_GUESTS = 0;
 
-const advOption  = {
+const AdvOptions  = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
   100: [0]
 };
 
-const advTypePrice = {
+const AdvTypePrices = {
   bungalow : 0,
   flat: 1000,
   hotel: 3000,
@@ -25,9 +26,18 @@ const advTypePrice = {
   palace: 10000
 };
 
-const form = document.querySelector('.ad-form');
-
-const pristine = new Pristine(form, {
+const formElement = document.querySelector('.ad-form');
+const guestsCountInputElement = formElement.querySelector('#capacity');
+const roomsCountInputElement = formElement.querySelector('#room_number');
+const priceInputElement = formElement.querySelector('#price');
+const advTypeFieldElement = document.querySelector('#type');
+const sliderElement = document.querySelector('.ad-form__slider');
+const checkInFieldElement = document.querySelector('#timein');
+const checkOutFieldElement = document.querySelector('#timeout');
+const submitButtonElement = document.querySelector('.ad-form__submit');
+const resetButtonElement = document.querySelector('.ad-form__reset');
+// Валидация формы
+const pristine = new Pristine(formElement, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
   errorTextTag: 'span',
@@ -35,15 +45,12 @@ const pristine = new Pristine(form, {
 },false);
 
 const checkTitleInput =  (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
-pristine.addValidator(form.querySelector('#title'), checkTitleInput);
+pristine.addValidator(formElement.querySelector('#title'), checkTitleInput);
 
-const guestsCountInput = form.querySelector('#capacity');
-const roomsCountInput = form.querySelector('#room_number');
-
-const validateAdv = () => advOption[roomsCountInput.value].includes(Number(guestsCountInput.value));
+const validateAdv = () => AdvOptions[roomsCountInputElement.value].includes(Number(guestsCountInputElement.value));
 
 const selectGuestsErorrMessage = () => {
-  const guestsCount = Number(guestsCountInput.value);
+  const guestsCount = Number(guestsCountInputElement.value);
   if (guestsCount === NO_GUESTS) {
     return 'Не для гостей';
   }
@@ -51,30 +58,24 @@ const selectGuestsErorrMessage = () => {
 };
 
 const selectRoomsErorrMessage = () => {
-  const roomsCount = Number(roomsCountInput.value);
+  const roomsCount = Number(roomsCountInputElement.value);
   if (roomsCount === MAX_ROOMS) {
     return 'Не для гостей';
   }
   return `Не больше ${roomsCount} ${getGuestsEnds(roomsCount)}`;
 };
 
-pristine.addValidator(roomsCountInput, validateAdv, selectRoomsErorrMessage);
-pristine.addValidator(guestsCountInput, validateAdv, selectGuestsErorrMessage);
+pristine.addValidator(roomsCountInputElement, validateAdv, selectRoomsErorrMessage);
+pristine.addValidator(guestsCountInputElement, validateAdv, selectGuestsErorrMessage);
 
-const priceInput = form.querySelector('#price');
-const advTypeField = document.querySelector('#type');
-
-
-const getMinPrice = () => Number(advTypePrice[advTypeField.value]);
+const getMinPrice = () => Number(AdvTypePrices[advTypeFieldElement.value]);
 
 const validateType = (value) => value >= getMinPrice() && value <= MAX_ROOM_PRICE;
 
 const getAdvPriceErrorMessage = () => `Минимальная цена ${getMinPrice()}, максимальная цена ${MAX_ROOM_PRICE}`;
 
-pristine.addValidator(priceInput, validateType, getAdvPriceErrorMessage);
-//  Слайдер
-const sliderElement = document.querySelector('.ad-form__slider');
-
+pristine.addValidator(priceInputElement, validateType, getAdvPriceErrorMessage);
+// Слайдер
 noUiSlider.create(sliderElement, {
   range: {
     min: getMinPrice(),
@@ -89,29 +90,29 @@ noUiSlider.create(sliderElement, {
   },
 });
 
-priceInput.addEventListener('input', () => {
-  sliderElement.noUiSlider.set(priceInput.value);
+priceInputElement.addEventListener('input', () => {
+  sliderElement.noUiSlider.set(priceInputElement.value);
 });
 
 sliderElement.noUiSlider.on('slide', () => {
-  priceInput.value = sliderElement.noUiSlider.get();
-  pristine.validate(priceInput);
+  priceInputElement.value = sliderElement.noUiSlider.get();
+  pristine.validate(priceInputElement);
 });
 
 const getMinPriceForSlider = (minPrice) => {
-  if (minPrice > priceInput.value) {
+  if (minPrice > priceInputElement.value) {
     return minPrice;
   }
 
-  return Number(priceInput.value);
+  return Number(priceInputElement.value);
 };
 
 
 const typeChanging = (evt) => {
-  const minRoomPrice = advTypePrice[evt.target.value];
-  priceInput.placeholder = minRoomPrice;
-  priceInput.min = minRoomPrice;
-  pristine.validate(priceInput);
+  const minRoomPrice = AdvTypePrices[evt.target.value];
+  priceInputElement.placeholder = minRoomPrice;
+  priceInputElement.min = minRoomPrice;
+  pristine.validate(priceInputElement);
   sliderElement.noUiSlider.updateOptions({
     range: {
       min: 0,
@@ -120,62 +121,55 @@ const typeChanging = (evt) => {
     start: getMinPriceForSlider(minRoomPrice),
   });
 };
-advTypeField.addEventListener('change', typeChanging);
+advTypeFieldElement.addEventListener('change', typeChanging);
 
-const checkInField = document.querySelector('#timein');
-const checkOutField = document.querySelector('#timeout');
-
-checkInField.addEventListener('change', (evt) => {
-  checkOutField.value = evt.target.value;
+checkInFieldElement.addEventListener('change', (evt) => {
+  checkOutFieldElement.value = evt.target.value;
 });
 
-checkOutField.addEventListener('change', (evt) => {
-  checkInField.value = evt.target.value;
+checkOutFieldElement.addEventListener('change', (evt) => {
+  checkInFieldElement.value = evt.target.value;
 });
 
-
-const submitButton = document.querySelector('.ad-form__submit');
-
-const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = 'Публикую...';
+const onSubmitButtonBlock = () => {
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = 'Публикую...';
 };
 
-const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
+const onSubmitButtonUnblock = () => {
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = 'Опубликовать';
 };
-
-const resetForm = () => {
-  form.reset();
-  sliderElement.noUiSlider.set(priceInput.placeholder);
-  priceInput.placeholder = getMinPrice();
+// Очистка формы
+const onFormReset = () => {
+  formElement.reset();
+  sliderElement.noUiSlider.set(priceInputElement.placeholder);
+  priceInputElement.placeholder = getMinPrice();
   resetMap();
-  resetPhotos();
+  onFormPhotosReset();
+  onFilterFormReset();
 };
 
-const resetButton = document.querySelector('.ad-form__reset');
-
-resetButton.addEventListener('click', (evt) => {evt.preventDefault(); resetForm();});
-
+resetButtonElement.addEventListener('click', (evt) => {evt.preventDefault(); onFormReset();});
+// Публикация формы
 const setUserFormSubmit = () => {
-  form.addEventListener('submit', (evt) => {
+  formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     if (!pristine.validate()) {
       return;
     }
 
-    blockSubmitButton();
+    onSubmitButtonBlock();
     sendData(
       () => {
         showSuccessMessage();
-        unblockSubmitButton();
-        resetForm();
+        onSubmitButtonUnblock();
+        onFormReset();
       },
       () => {
         showErrorMessage();
-        unblockSubmitButton();
+        onSubmitButtonUnblock();
       },
       new FormData(evt.target),
     );

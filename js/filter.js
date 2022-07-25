@@ -18,22 +18,24 @@ const priceRange = {
   },
 };
 
+const filterFormElement = document.querySelector('.map__filters');
+//Фильтр карточек
 const filterMarkers = (cards) => {
   markerGroup.clearLayers();
   const getFilteredCard = (card) => {
     const {price, type, rooms, guests, features} = card.offer;
 
-    const mapFilterType = document.querySelector('#housing-type');
-    const mapFilterPrice = document.querySelector('#housing-price');
-    const mapFilterRooms = document.querySelector('#housing-rooms');
-    const mapFilterGuests = document.querySelector('#housing-guests');
-    const mapSelectedFeatures = document.querySelectorAll('input[name="features"]:checked');
+    const mapFilterTypeElement = document.querySelector('#housing-type');
+    const mapFilterPriceElement = document.querySelector('#housing-price');
+    const mapFilterRoomsElement = document.querySelector('#housing-rooms');
+    const mapFilterGuestsElement = document.querySelector('#housing-guests');
+    const mapSelectedFeaturesElement = document.querySelectorAll('input[name="features"]:checked');
 
-    const checkAdvType = () => mapFilterType.value === DEFAULT_VALUE || type === mapFilterType.value;
-    const checkPrice = () =>  mapFilterPrice.value === DEFAULT_VALUE || price <= priceRange[mapFilterPrice.value].max && price >= priceRange[mapFilterPrice.value].min;
-    const checkRoomsCount = () => mapFilterRooms.value === DEFAULT_VALUE || rooms === Number(mapFilterRooms.value);
-    const checkGuestsCount = () => mapFilterGuests.value === DEFAULT_VALUE || guests === Number(mapFilterGuests.value);
-    const getSelectedCheckboxes = () => {const values = Array.from(mapSelectedFeatures, ({value}) => value);
+    const checkAdvType = () => mapFilterTypeElement.value === DEFAULT_VALUE || type === mapFilterTypeElement.value;
+    const checkPrice = () =>  mapFilterPriceElement.value === DEFAULT_VALUE || price <= priceRange[mapFilterPriceElement.value].max && price >= priceRange[mapFilterPriceElement.value].min;
+    const checkRoomsCount = () => mapFilterRoomsElement.value === DEFAULT_VALUE || rooms === Number(mapFilterRoomsElement.value);
+    const checkGuestsCount = () => mapFilterGuestsElement.value === DEFAULT_VALUE || guests === Number(mapFilterGuestsElement.value);
+    const getSelectedCheckboxes = () => {const values = Array.from(mapSelectedFeaturesElement, ({value}) => value);
       return values;
     };
 
@@ -48,7 +50,7 @@ const filterMarkers = (cards) => {
   checkRoomsCount(card) && checkGuestsCount(card) && checkFeatures(card));
   };
 
-
+  //Массив из 10 карточек по подходящих под условия фильтра
   const filteredCards = [];
 
   for (const el of cards) {
@@ -63,9 +65,13 @@ const filterMarkers = (cards) => {
   filteredCards.forEach(createMarker);
 
 };
+
 const onFilterChange = (cb) => {
-  const filterForm = document.querySelector('.map__filters');
-  filterForm.addEventListener('change', cb);
+  filterFormElement.addEventListener('change', cb);
+};
+//Сброс формы фильтра
+const onFilterFormReset = () =>{
+  filterFormElement.reset();
 };
 
-export {filterMarkers, onFilterChange};
+export {filterMarkers, onFilterChange, onFilterFormReset};
