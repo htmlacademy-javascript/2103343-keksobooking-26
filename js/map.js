@@ -4,23 +4,19 @@ import {getData} from './api.js';
 import { onFilterChange, filterMarkers } from './filter.js';
 import { debounce } from './util.js';
 
-//Координаты Токио
 const START_LAT = 35.68950;
 const START_LNG = 139.69200;
-// Количество знаков после запятой
 const ROUND_UP_TO = 5;
-// Масштаб
 const SCALE = 10;
-//Число карточек
 const CARDS_COUNT = 10;
 
 //Округление координат
 const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
 //Поле адреса
-const addressInput = document.querySelector('#address');
-const setAddressInput = () => {
-  addressInput.readOnly = true;
-  addressInput.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
+const addressInputElement = document.querySelector('#address');
+const onAddressInputSet = () => {
+  addressInputElement.readOnly = true;
+  addressInputElement.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
 };
 
 // Отображение карты и дальнейший переход страницы в активное состояние после инициализации карты.
@@ -58,13 +54,12 @@ const mainPinMarker = L.marker({
 
 mainPinMarker.addTo(map);
 
-setAddressInput();
+onAddressInputSet();
 
 //Выбор адреса путём перемещения главной метки.
-
 mainPinMarker.on('moveend', (evt) => {
   const latLng = evt.target.getLatLng();
-  addressInput.value = `${roundUp(latLng.lat)}, ${roundUp(latLng.lng)}`;
+  addressInputElement.value = `${roundUp(latLng.lat)}, ${roundUp(latLng.lng)}`;
 });
 
 // Добавление на карту меток объявлений, «обычных».
@@ -77,7 +72,6 @@ const ordinaryPinIcon = L.icon({
 });
 
 // Создание обьявлений.
-
 const createMarker = (card) =>  {
   const marker = L.marker({
     lat: card.location.lat,
@@ -107,7 +101,7 @@ createMarkers();
 
 // Сброс карты
 const resetMap = () => {
-  setAddressInput();
+  onAddressInputSet();
   mainPinMarker.setLatLng({
     lat: START_LAT,
     lng: START_LNG,

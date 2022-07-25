@@ -1,13 +1,13 @@
-import { isEscapeKey } from './util.js';
-//Время показа сообщения
+import { onEventEsc } from './util.js';
+
 const SHOW_TIME = 5000;
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 
-const messageCloseHandler = (evtObj) => {
+const onMessageClose = (evtObj) => {
   const onEventEscKeydown = (evt) => {
-    if(isEscapeKey(evt)){
+    if(onEventEsc(evt)){
       evt.preventDefault();
       evtObj.remove();
       document.removeEventListener('keydown', onEventEscKeydown);
@@ -26,28 +26,28 @@ const messageCloseHandler = (evtObj) => {
 const showSuccessMessage = () => {
   const message = successMessageTemplate.cloneNode(true);
   document.body.appendChild(message);
-  messageCloseHandler(message);
+  onMessageClose(message);
 };
 //Сообщение ошибки
 const showErrorMessage = () => {
   const message = errorMessageTemplate.cloneNode(true);
   document.body.appendChild(message);
-  const errorMessageCloseButton = document.querySelector('.error__button');
+  const errorMessageCloseButtonElement = document.querySelector('.error__button');
   document.querySelector('.error__message').textContent = 'Не удалось отправить';
 
-  errorMessageCloseButton.addEventListener('click', () => {
+  errorMessageCloseButtonElement.addEventListener('click', () => {
     message.remove();
   });
-  messageCloseHandler(message);
+  onMessageClose(message);
 };
 // Сообщение об ошибке загрузки данных с сервера
 const showAlert = () => {
-  const alert = document.createElement('div');
-  alert.classList.add('allert');
-  alert.textContent = 'Ошибка загрузки данных с сервера!';
-  document.body.append(alert);
+  const alertElement = document.createElement('div');
+  alertElement.classList.add('allert');
+  alertElement.textContent = 'Ошибка загрузки данных с сервера!';
+  document.body.append(alertElement);
   setTimeout(() => {
-    alert.remove();
+    alertElement.remove();
   }, SHOW_TIME);
 };
 export {showSuccessMessage, showErrorMessage, showAlert};
