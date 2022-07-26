@@ -1,24 +1,23 @@
-import {getRoomEnds, getGuestsEnds} from './util.js';
+import {getGuestsEnds} from './util.js';
 import {sendData} from './api.js';
 import {showSuccessMessage, showErrorMessage} from './message.js';
 import {resetMap} from './map.js';
-import { onFormPhotosReset } from './photo.js';
-import { onFilterFormReset } from './filter.js';
+import {resetPhotos} from './photo.js';
+import {resetFilterForm} from './filter.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_ROOM_PRICE = 100000;
 const MAX_ROOMS = 100;
-const NO_GUESTS = 0;
 
-const AdvOptions  = {
+const advOptions  = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
   100: [0]
 };
 
-const AdvTypePrices = {
+const advTypePrices = {
   bungalow : 0,
   flat: 1000,
   hotel: 3000,
@@ -42,20 +41,12 @@ const pristine = new Pristine(formElement, {
   errorTextParent: 'ad-form__element',
   errorTextTag: 'span',
   errorTextClass: 'ad-form__element--error',
-},false);
+});
 
 const checkTitleInput =  (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 pristine.addValidator(formElement.querySelector('#title'), checkTitleInput);
 
-const validateAdv = () => AdvOptions[roomsCountInputElement.value].includes(Number(guestsCountInputElement.value));
-
-const selectGuestsErorrMessage = () => {
-  const guestsCount = Number(guestsCountInputElement.value);
-  if (guestsCount === NO_GUESTS) {
-    return 'Не для гостей';
-  }
-  return `Необходимо не менее ${guestsCount} ${getRoomEnds(guestsCount)} `;
-};
+const validateAdv = () => advOptions[roomsCountInputElement.value].includes(Number(guestsCountInputElement.value));
 
 const selectRoomsErorrMessage = () => {
   const roomsCount = Number(roomsCountInputElement.value);
@@ -65,14 +56,17 @@ const selectRoomsErorrMessage = () => {
   return `Не больше ${roomsCount} ${getGuestsEnds(roomsCount)}`;
 };
 
-pristine.addValidator(roomsCountInputElement, validateAdv, selectRoomsErorrMessage);
-pristine.addValidator(guestsCountInputElement, validateAdv, selectGuestsErorrMessage);
+pristine.addValidator(guestsCountInputElement, validateAdv, selectRoomsErorrMessage);
 
-const getMinPrice = () => Number(AdvTypePrices[advTypeFieldElement.value]);
+const getMinPrice = () => Number(advTypePrices[advTypeFieldElement.value]);
 
 const validateType = (value) => value >= getMinPrice() && value <= MAX_ROOM_PRICE;
 
-const getAdvPriceErrorMessage = () => `Минимальная цена ${getMinPrice()}, максимальная цена ${MAX_ROOM_PRICE}`;
+const getAdvPriceErrorMessage = () => {
+  if(priceInputElement.value <= getMinPrice()) {
+    return `Минимальная цена ${getMinPrice()}руб.`;
+  }
+};
 
 pristine.addValidator(priceInputElement, validateType, getAdvPriceErrorMessage);
 // Слайдер
@@ -109,7 +103,7 @@ const getMinPriceForSlider = (minPrice) => {
 
 
 const typeChanging = (evt) => {
-  const minRoomPrice = AdvTypePrices[evt.target.value];
+  const minRoomPrice = advTypePrices[evt.target.value];
   priceInputElement.placeholder = minRoomPrice;
   priceInputElement.min = minRoomPrice;
   pristine.validate(priceInputElement);
@@ -131,26 +125,27 @@ checkOutFieldElement.addEventListener('change', (evt) => {
   checkInFieldElement.value = evt.target.value;
 });
 
-const onSubmitButtonBlock = () => {
+const blockSubmitButton = () => {
   submitButtonElement.disabled = true;
   submitButtonElement.textContent = 'Публикую...';
 };
 
-const onSubmitButtonUnblock = () => {
+const unblockSubmitButton = () => {
   submitButtonElement.disabled = false;
   submitButtonElement.textContent = 'Опубликовать';
 };
 // Очистка формы
-const onFormReset = () => {
+const resetAll = () => {
   formElement.reset();
   sliderElement.noUiSlider.set(priceInputElement.placeholder);
   priceInputElement.placeholder = getMinPrice();
+  pristine.reset();
   resetMap();
-  onFormPhotosReset();
-  onFilterFormReset();
+  resetPhotos();
+  resetFilterForm();
 };
 
-resetButtonElement.addEventListener('click', (evt) => {evt.preventDefault(); onFormReset();});
+resetButtonElement.addEventListener('click', (evt) => {evt.preventDefault(); resetAll();});
 // Публикация формы
 const setUserFormSubmit = () => {
   formElement.addEventListener('submit', (evt) => {
@@ -160,16 +155,16 @@ const setUserFormSubmit = () => {
       return;
     }
 
-    onSubmitButtonBlock();
+    blockSubmitButton();
     sendData(
       () => {
         showSuccessMessage();
-        onSubmitButtonUnblock();
-        onFormReset();
+        unblockSubmitButton();
+        resetAll();
       },
       () => {
         showErrorMessage();
-        onSubmitButtonUnblock();
+        unblockSubmitButton();
       },
       new FormData(evt.target),
     );
