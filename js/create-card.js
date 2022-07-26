@@ -2,7 +2,7 @@ import {getCardRoomEnds, getGuestsEnds} from './util.js';
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-const TypesMatches = {
+const typesMatches = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -18,7 +18,7 @@ const createCard = (card) => {
   cardElement.querySelector('.popup__title').textContent = title;
   cardElement.querySelector('.popup__text--address').textContent = address;
   cardElement.querySelector('.popup__text--price').textContent = `${price} ₽/ночь`;
-  cardElement.querySelector('.popup__type').textContent = TypesMatches[type];
+  cardElement.querySelector('.popup__type').textContent = typesMatches[type];
   cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} ${getCardRoomEnds(rooms)} для ${guests} ${getGuestsEnds(guests)}`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
 

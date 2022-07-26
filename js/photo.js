@@ -16,6 +16,7 @@ const getPhotoUrl = (photoChooser) => {
 };
 //Выбор фото аватара
 userPhotoChooserElement.addEventListener('change', () => {
+  userPhotoPreviewElement.style.objectFit = 'cover';
   userPhotoPreviewElement.src = getPhotoUrl(userPhotoChooserElement);
 });
 // Выбор фото жилья
@@ -23,14 +24,15 @@ advPhotoChooserElement.addEventListener('change', () => {
   advPhotoPreviewElement.innerHTML = '';
   const photoElement = document.createElement('img');
   photoElement.classList.add('ad-form__photo');
+  photoElement.style.objectFit = 'cover';
   photoElement.src = getPhotoUrl(advPhotoChooserElement);
   advPhotoPreviewElement.append(photoElement);
 });
 // Очистка формы
-const onFormPhotosReset = () =>{
+const resetPhotos = () =>{
   advPhotoPreviewElement.innerHTML = '';
   userPhotoPreviewElement.src = DEFAULT_AVATAR_IMAGE;
 };
 
-export {onFormPhotosReset};
+export {resetPhotos};
 

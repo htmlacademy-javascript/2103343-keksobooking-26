@@ -1,44 +1,42 @@
-import { onEventEsc } from './util.js';
-
 const SHOW_TIME = 5000;
 
-const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const successMessageTemplateElement = document.querySelector('#success').content.querySelector('.success');
+const errorMessageTemplateElement = document.querySelector('#error').content.querySelector('.error');
 
-const onMessageClose = (evtObj) => {
-  const onEventEscKeydown = (evt) => {
-    if(onEventEsc(evt)){
+const addMessageListeners = (messageElement) => {
+  const onKeydown = (evt) => {
+    if(evt.key === 'Escape'){
       evt.preventDefault();
-      evtObj.remove();
-      document.removeEventListener('keydown', onEventEscKeydown);
+      messageElement.remove();
+      document.removeEventListener('keydown', onKeydown);
     }
   };
-  document.addEventListener('keydown', onEventEscKeydown);
+  document.addEventListener('keydown', onKeydown);
 
-  const onEventClick = () => {
-    document.removeEventListener('click', onEventClick);
-    evtObj.remove();
+  const onClick = () => {
+    document.removeEventListener('click', onClick);
+    messageElement.remove();
   };
-  document.addEventListener('click', onEventClick);
+  document.addEventListener('click', onClick);
 };
 
 //Сообщение об успешной отправке
 const showSuccessMessage = () => {
-  const message = successMessageTemplate.cloneNode(true);
-  document.body.appendChild(message);
-  onMessageClose(message);
+  const element = successMessageTemplateElement.cloneNode(true);
+  document.body.appendChild(element);
+  addMessageListeners(element);
 };
 //Сообщение ошибки
 const showErrorMessage = () => {
-  const message = errorMessageTemplate.cloneNode(true);
-  document.body.appendChild(message);
+  const element = errorMessageTemplateElement.cloneNode(true);
+  document.body.appendChild(element);
   const errorMessageCloseButtonElement = document.querySelector('.error__button');
   document.querySelector('.error__message').textContent = 'Не удалось отправить';
 
   errorMessageCloseButtonElement.addEventListener('click', () => {
-    message.remove();
+    element.remove();
   });
-  onMessageClose(message);
+  addMessageListeners(element);
 };
 // Сообщение об ошибке загрузки данных с сервера
 const showAlert = () => {
