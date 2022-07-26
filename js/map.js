@@ -1,7 +1,7 @@
 import {disableForm, disableFormFilter, enableForm} from './ad-form.js';
 import {createCard} from './create-card.js';
 import {getData} from './api.js';
-import { onFilterChange, filterMarkers } from './filter.js';
+import { addFilterFormListener, filterMarkers } from './filter.js';
 import { debounce } from './util.js';
 
 const START_LAT = 35.68950;
@@ -14,7 +14,7 @@ const CARDS_COUNT = 10;
 const roundUp = (coord) => coord.toFixed(ROUND_UP_TO);
 //Поле адреса
 const addressInputElement = document.querySelector('#address');
-const onAddressInputSet = () => {
+const resetAddress = () => {
   addressInputElement.readOnly = true;
   addressInputElement.value = `${roundUp(START_LAT)}, ${roundUp(START_LNG)}`;
 };
@@ -54,7 +54,7 @@ const mainPinMarker = L.marker({
 
 mainPinMarker.addTo(map);
 
-onAddressInputSet();
+resetAddress();
 
 //Выбор адреса путём перемещения главной метки.
 mainPinMarker.on('moveend', (evt) => {
@@ -76,9 +76,11 @@ const createMarker = (card) =>  {
   const marker = L.marker({
     lat: card.location.lat,
     lng: card.location.lng,
-  }, {
-    ordinaryPinIcon,
-  }, );
+  },
+  {
+    icon: ordinaryPinIcon,
+  },
+  );
 
   marker
     .addTo(markerGroup)
@@ -91,7 +93,7 @@ const createMarkers = () => {
     cards
       .slice(0, CARDS_COUNT)
       .forEach(createMarker);
-    onFilterChange(debounce(() => {
+    addFilterFormListener(debounce(() => {
       filterMarkers(cards);}));
   });
 
@@ -101,7 +103,9 @@ createMarkers();
 
 // Сброс карты
 const resetMap = () => {
-  onAddressInputSet();
+  resetAddress();
+  markerGroup.clearLayers();
+  createMarkers();
   mainPinMarker.setLatLng({
     lat: START_LAT,
     lng: START_LNG,
