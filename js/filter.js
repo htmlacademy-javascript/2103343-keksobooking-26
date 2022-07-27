@@ -18,19 +18,15 @@ const  levelToPriceRange = {
   },
 };
 
-const filterFormElement = document.querySelector('.map__filters');
-const mapFilterTypeElement = document.querySelector('#housing-type');
-const mapFilterPriceElement = document.querySelector('#housing-price');
-const mapFilterRoomsElement = document.querySelector('#housing-rooms');
-const mapFilterGuestsElement = document.querySelector('#housing-guests');
+const formElement = document.querySelector('.map__filters');
 
-const checkAdvType = ({offer}) => mapFilterTypeElement.value === DEFAULT_VALUE || offer.type === mapFilterTypeElement.value;
-const checkPrice = ({offer}) =>  mapFilterPriceElement.value === DEFAULT_VALUE || offer.price <= levelToPriceRange[mapFilterPriceElement.value].max && offer.price >= levelToPriceRange[mapFilterPriceElement.value].min;
-const checkRoomsCount = ({offer}) => mapFilterRoomsElement.value === DEFAULT_VALUE || offer.rooms === Number(mapFilterRoomsElement.value);
-const checkGuestsCount = ({offer}) => mapFilterGuestsElement.value === DEFAULT_VALUE || offer.guests === Number(mapFilterGuestsElement.value);
+const checkAdvType = ({offer}) => formElement['housing-type'].value === DEFAULT_VALUE || offer.type === formElement['housing-type'].value;
+const checkPrice = ({offer}) =>  formElement['housing-price'].value === DEFAULT_VALUE || offer.price <= levelToPriceRange[formElement['housing-price'].value].max && offer.price >= levelToPriceRange[formElement['housing-price'].value].min;
+const checkRoomsCount = ({offer}) => formElement['housing-rooms'].value === DEFAULT_VALUE || offer.rooms === Number(formElement['housing-rooms'].value);
+const checkGuestsCount = ({offer}) => formElement['housing-guests'].value === DEFAULT_VALUE || offer.guests === Number(formElement['housing-guests'].value);
 const checkFeatures = ({offer}) => {
-  const mapSelectedFeaturesElement = document.querySelectorAll('input[name="features"]:checked');
-  const values = Array.from(mapSelectedFeaturesElement, ({value}) => value);
+  const selectedElements = formElement.querySelectorAll('input[name="features"]:checked');
+  const values = Array.from(selectedElements, ({value}) => value);
   if (offer.features) {
     return values.every((feature) => offer.features.includes(feature));
   }
@@ -58,11 +54,11 @@ const filterMarkers = (cards) => {
 };
 
 const addFilterFormListener = (listener) => {
-  filterFormElement.addEventListener('change', listener);
+  formElement.addEventListener('change', listener);
 };
 //Сброс формы фильтра
 const resetFilterForm = () =>{
-  filterFormElement.reset();
+  formElement.reset();
 };
 
 export {filterMarkers, addFilterFormListener, resetFilterForm};
