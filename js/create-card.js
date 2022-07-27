@@ -1,6 +1,6 @@
 import {getCardRoomEnds, getGuestsEnds} from './util.js';
 
-const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+const cardTemplateElement = document.querySelector('#card').content.querySelector('.popup');
 
 const typeToName = {
   flat: 'Квартира',
@@ -12,7 +12,7 @@ const typeToName = {
 //Создание картоки объявления
 const createCard = (card) => {
 
-  const cardElement = cardTemplate.cloneNode(true);
+  const cardElement = cardTemplateElement.cloneNode(true);
   const {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos} = card.offer;
   cardElement.querySelector('.popup__avatar').src = card.author.avatar ;
   cardElement.querySelector('.popup__title').textContent = title;
@@ -24,11 +24,11 @@ const createCard = (card) => {
 
   const featuresListElement = cardElement.querySelector('.popup__features');
   if(features) {
-    const featuresListElements = featuresListElement.querySelectorAll('.popup__feature');
-    featuresListElements.forEach((featureItem) => {
-      if(!features.some((feature) => featureItem.classList.contains(`popup__feature--${feature}`)))
+    const featuresElements = featuresListElement.querySelectorAll('.popup__feature');
+    featuresElements.forEach((element) => {
+      if(!features.some((feature) => element.classList.contains(`popup__feature--${feature}`)))
       {
-        featureItem.remove();
+        element.remove();
       }
     });
   }
@@ -40,10 +40,10 @@ const createCard = (card) => {
 
   const photoListElement = cardElement.querySelector('.popup__photos');
   if(photos) {
-    const photoListElements = photoListElement.querySelector('.popup__photo');
-    photoListElements.remove();
+    const photoTemplateElement = photoListElement.querySelector('.popup__photo');
+    photoTemplateElement.remove();
     photos.forEach((photo) => {
-      const photoElement = photoListElements.cloneNode(true);
+      const photoElement = photoTemplateElement.cloneNode(true);
       photoElement.src = photo;
       photoListElement.append(photoElement);
     });

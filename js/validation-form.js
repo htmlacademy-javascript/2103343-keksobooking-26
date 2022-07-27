@@ -9,6 +9,7 @@ const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_ROOM_PRICE = 100000;
 const MAX_ROOMS = 100;
+const NO_GUESTS = 0;
 
 const advRoomNumberToCapacity  = {
   1: [1],
@@ -29,12 +30,12 @@ const formElement = document.querySelector('.ad-form');
 const guestsCountInputElement = formElement.querySelector('#capacity');
 const roomsCountInputElement = formElement.querySelector('#room_number');
 const priceInputElement = formElement.querySelector('#price');
-const advTypeFieldElement = document.querySelector('#type');
-const sliderElement = document.querySelector('.ad-form__slider');
-const checkInFieldElement = document.querySelector('#timein');
-const checkOutFieldElement = document.querySelector('#timeout');
-const submitButtonElement = document.querySelector('.ad-form__submit');
-const resetButtonElement = document.querySelector('.ad-form__reset');
+const advTypeFieldElement = formElement.querySelector('#type');
+const sliderElement = formElement.querySelector('.ad-form__slider');
+const checkInFieldElement = formElement.querySelector('#timein');
+const checkOutFieldElement = formElement.querySelector('#timeout');
+const submitButtonElement = formElement.querySelector('.ad-form__submit');
+const resetButtonElement = formElement.querySelector('.ad-form__reset');
 // Валидация формы
 const pristine = new Pristine(formElement, {
   classTo: 'ad-form__element',
@@ -50,13 +51,22 @@ const validateAdv = () => advRoomNumberToCapacity[roomsCountInputElement.value].
 
 const selectRoomsErorrMessage = () => {
   const roomsCount = Number(roomsCountInputElement.value);
+  const guestsCount = Number(guestsCountInputElement.value);
   if (roomsCount === MAX_ROOMS) {
     return 'Не для гостей';
   }
+  if(guestsCount === NO_GUESTS) {
+    return `Не менее ${roomsCount} ${getGuestsEnds(roomsCount)}`;
+  }
+
   return `Не больше ${roomsCount} ${getGuestsEnds(roomsCount)}`;
 };
 
 pristine.addValidator(guestsCountInputElement, validateAdv, selectRoomsErorrMessage);
+
+roomsCountInputElement.addEventListener('change', () => {
+  pristine.validate(guestsCountInputElement);
+});
 
 const getMinPrice = () => Number(advTypeToPrice[advTypeFieldElement.value]);
 
@@ -84,6 +94,7 @@ noUiSlider.create(sliderElement, {
     from: (value) => parseFloat(value),
   },
 });
+priceInputElement.placeholder = getMinPrice();
 
 priceInputElement.addEventListener('input', () => {
   sliderElement.noUiSlider.set(priceInputElement.value);
@@ -107,7 +118,7 @@ const resetSlider = () => {
   priceInputElement.placeholder = getMinPrice();
 };
 
-const typeChanging = (evt) => {
+advTypeFieldElement.addEventListener('change', (evt) => {
   const minRoomPrice = advTypeToPrice[evt.target.value];
   priceInputElement.placeholder = minRoomPrice;
   priceInputElement.min = minRoomPrice;
@@ -119,8 +130,7 @@ const typeChanging = (evt) => {
     },
     start: getMinPriceForSlider(minRoomPrice),
   });
-};
-advTypeFieldElement.addEventListener('change', typeChanging);
+});
 
 checkInFieldElement.addEventListener('change', (evt) => {
   checkOutFieldElement.value = evt.target.value;
@@ -151,28 +161,26 @@ const resetAll = () => {
 
 resetButtonElement.addEventListener('click', (evt) => {evt.preventDefault(); resetAll();});
 // Публикация формы
-const setUserFormSubmit = () => {
-  formElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+formElement.addEventListener('submit', (evt) => {
+  evt.preventDefault();
 
-    if (!pristine.validate()) {
-      return;
-    }
+  if (!pristine.validate()) {
+    return;
+  }
 
-    blockSubmitButton();
-    sendData(
-      () => {
-        showSuccessMessage();
-        unblockSubmitButton();
-        resetAll();
-      },
-      () => {
-        showErrorMessage();
-        unblockSubmitButton();
-      },
-      new FormData(evt.target),
-    );
-  });
-};
+  blockSubmitButton();
+  sendData(
+    () => {
+      showSuccessMessage();
+      unblockSubmitButton();
+      resetAll();
+    },
+    () => {
+      showErrorMessage();
+      unblockSubmitButton();
+    },
+    new FormData(evt.target),
+  );
+});
 
-setUserFormSubmit();
+
