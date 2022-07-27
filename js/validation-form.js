@@ -10,14 +10,14 @@ const MAX_TITLE_LENGTH = 100;
 const MAX_ROOM_PRICE = 100000;
 const MAX_ROOMS = 100;
 
-const advOptions  = {
+const advRoomNumberToCapacity  = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
   100: [0]
 };
 
-const advTypePrices = {
+const advTypeToPrice = {
   bungalow : 0,
   flat: 1000,
   hotel: 3000,
@@ -46,7 +46,7 @@ const pristine = new Pristine(formElement, {
 const checkTitleInput =  (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
 pristine.addValidator(formElement.querySelector('#title'), checkTitleInput);
 
-const validateAdv = () => advOptions[roomsCountInputElement.value].includes(Number(guestsCountInputElement.value));
+const validateAdv = () => advRoomNumberToCapacity[roomsCountInputElement.value].includes(Number(guestsCountInputElement.value));
 
 const selectRoomsErorrMessage = () => {
   const roomsCount = Number(roomsCountInputElement.value);
@@ -58,7 +58,7 @@ const selectRoomsErorrMessage = () => {
 
 pristine.addValidator(guestsCountInputElement, validateAdv, selectRoomsErorrMessage);
 
-const getMinPrice = () => Number(advTypePrices[advTypeFieldElement.value]);
+const getMinPrice = () => Number(advTypeToPrice[advTypeFieldElement.value]);
 
 const validateType = (value) => value >= getMinPrice() && value <= MAX_ROOM_PRICE;
 
@@ -103,7 +103,7 @@ const getMinPriceForSlider = (minPrice) => {
 
 
 const typeChanging = (evt) => {
-  const minRoomPrice = advTypePrices[evt.target.value];
+  const minRoomPrice = advTypeToPrice[evt.target.value];
   priceInputElement.placeholder = minRoomPrice;
   priceInputElement.min = minRoomPrice;
   pristine.validate(priceInputElement);

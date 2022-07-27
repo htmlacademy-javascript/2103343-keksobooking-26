@@ -3,7 +3,7 @@ import { createMarker, markerGroup } from './map.js';
 const MARKERS_COUNT = 10;
 const DEFAULT_VALUE = 'any';
 
-const priceRange = {
+const  levelToPriceRange = {
   low: {
     min: 0,
     max: 9999,
@@ -25,7 +25,7 @@ const mapFilterRoomsElement = document.querySelector('#housing-rooms');
 const mapFilterGuestsElement = document.querySelector('#housing-guests');
 
 const checkAdvType = ({offer}) => mapFilterTypeElement.value === DEFAULT_VALUE || offer.type === mapFilterTypeElement.value;
-const checkPrice = ({offer}) =>  mapFilterPriceElement.value === DEFAULT_VALUE || offer.price <= priceRange[mapFilterPriceElement.value].max && offer.price >= priceRange[mapFilterPriceElement.value].min;
+const checkPrice = ({offer}) =>  mapFilterPriceElement.value === DEFAULT_VALUE || offer.price <= levelToPriceRange[mapFilterPriceElement.value].max && offer.price >= levelToPriceRange[mapFilterPriceElement.value].min;
 const checkRoomsCount = ({offer}) => mapFilterRoomsElement.value === DEFAULT_VALUE || offer.rooms === Number(mapFilterRoomsElement.value);
 const checkGuestsCount = ({offer}) => mapFilterGuestsElement.value === DEFAULT_VALUE || offer.guests === Number(mapFilterGuestsElement.value);
 const checkFeatures = ({offer}) => {
