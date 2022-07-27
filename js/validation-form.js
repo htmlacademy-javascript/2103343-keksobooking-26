@@ -60,6 +60,7 @@ pristine.addValidator(guestsCountInputElement, validateAdv, selectRoomsErorrMess
 
 const getMinPrice = () => Number(advTypeToPrice[advTypeFieldElement.value]);
 
+
 const validateType = (value) => value >= getMinPrice() && value <= MAX_ROOM_PRICE;
 
 const getAdvPriceErrorMessage = () => {
@@ -72,10 +73,10 @@ pristine.addValidator(priceInputElement, validateType, getAdvPriceErrorMessage);
 // Слайдер
 noUiSlider.create(sliderElement, {
   range: {
-    min: getMinPrice(),
+    min: 0,
     max: MAX_ROOM_PRICE,
   },
-  start: 0,
+  start: getMinPrice(),
   step: 100,
   connect: 'lower',
   format: {
@@ -101,6 +102,10 @@ const getMinPriceForSlider = (minPrice) => {
   return Number(priceInputElement.value);
 };
 
+const resetSlider = () => {
+  sliderElement.noUiSlider.set(getMinPrice());
+  priceInputElement.placeholder = getMinPrice();
+};
 
 const typeChanging = (evt) => {
   const minRoomPrice = advTypeToPrice[evt.target.value];
@@ -137,8 +142,7 @@ const unblockSubmitButton = () => {
 // Очистка формы
 const resetAll = () => {
   formElement.reset();
-  sliderElement.noUiSlider.set(priceInputElement.placeholder);
-  priceInputElement.placeholder = getMinPrice();
+  resetSlider();
   pristine.reset();
   resetMap();
   resetPhotos();
